@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>QR masa kartı | Sude Sıla &amp; Recep Yusuf</title>
+  <link rel="icon" href="assets/img/simge.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/ortak.css?v=1">
+  <style>
+    body { background: var(--kagit); }
+    .sayfa { max-width: 980px; margin: 0 auto; padding: 28px 18px 48px; display: grid; gap: 24px; }
+    @media (min-width: 820px) { .sayfa { grid-template-columns: 1fr 380px; align-items: start; padding-top: 44px; } }
+    h1 { margin: 0; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 2.1rem; line-height: 1.1; }
+    .aciklama { margin: 8px 0 0; color: var(--soluk); }
+    .onizleme { background: #E9E2EB; border-radius: 24px; padding: 22px; display: grid; place-items: center; }
+    .onizleme canvas { width: 100%; max-width: 420px; height: auto; border-radius: 6px; box-shadow: 0 24px 50px -24px rgba(42,33,48,.55); background: #fff; }
+    .yan { display: grid; gap: 14px; }
+    .kutu { background: #fff; border-radius: 20px; padding: 18px; box-shadow: inset 0 0 0 1px var(--cizgi); display: grid; gap: 10px; }
+    .kutu h2 { margin: 0 0 2px; font-size: 1rem; }
+    .kutu p { margin: 0; color: var(--soluk); font-size: .92rem; }
+    .adim { margin: 0; padding-left: 1.2rem; color: var(--soluk); font-size: .92rem; display: grid; gap: 6px; }
+    .uyari { background: #FBF3E3; color: #6B5320; padding: 12px 14px; border-radius: 14px; font-size: .9rem; }
+    #baski { display: none; }
+    @media print {
+      @page { size: A4; margin: 0; }
+      body { background: #fff; }
+      .sayfa, .bildirimler { display: none !important; }
+      #baski { display: grid !important; grid-template-columns: 105mm 105mm; grid-template-rows: 148.5mm 148.5mm; width: 210mm; height: 297mm; }
+      #baski img { width: 105mm; height: 148.5mm; object-fit: contain; outline: .1mm dashed #ccc; outline-offset: -.05mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sayfa">
+    <section>
+      <h1>QR masa kartı</h1>
+      <p class="aciklama">Her masaya aynı kart konacak. Misafirler kodu telefon kamerasıyla okutunca anı paylaşma sayfası açılır.</p>
+      <div class="onizleme" style="margin-top:18px"><canvas id="kart" width="1240" height="1754" aria-label="Masa kartı önizlemesi"></canvas></div>
+    </section>
+
+    <aside class="yan">
+      <div class="kutu">
+        <h2>Kodun açacağı adres</h2>
+        <input class="girdi" id="adres" type="url" inputmode="url" spellcheck="false">
+        <p id="adresNot">Bu sayfanın bulunduğu sitenin adresi otomatik yazıldı.</p>
+        <div class="uyari" id="yerelUyari" hidden>Şu an sayfa bilgisayarınızda açık. Kartı, site GitHub'da yayına girdikten sonra oradaki qr.html sayfasından indirin ya da yukarıya sitenizin adresini yazın.</div>
+      </div>
+      <div class="kutu">
+        <h2>İndir ya da yazdır</h2>
+        <button class="dugme dugme--ana dugme--tam" type="button" id="kartIndir">Masa kartını indir (PNG)</button>
+        <button class="dugme dugme--cizgi dugme--tam" type="button" id="qrIndir">Sadece QR kodu indir (PNG)</button>
+        <button class="dugme dugme--cizgi dugme--tam" type="button" id="yazdir">A4 kâğıda 4 kart yazdır</button>
+        <p>Kart, A6 boyutunda (10,5 × 14,8 cm) ve 300 dpi baskı kalitesindedir.</p>
+      </div>
+      <div class="kutu">
+        <h2>Basmadan önce</h2>
+        <ol class="adim">
+          <li>Kartı telefonunuzun kamerasıyla ekrandan okutun, sayfanın açıldığını görün.</li>
+          <li>Bir deneme baskısı alıp kâğıttan da okutun.</li>
+          <li>Matbaaya PNG dosyasını verebilirsiniz.</li>
+        </ol>
+      </div>
+    </aside>
+  </div>
+  <div id="baski"></div>
+  <div class="bildirimler" id="bildirimler"></div>
+
+  <script src="ayarlar.js?v=1"></script>
+  <script src="assets/vendor/qrcode.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var A = window.AYARLAR || {};
+    var GECE = '#2A2130', ALTIN = '#C9A257', GUL = '#A58898', ZEYTIN = '#8D9463', SOLUK = '#6B6171';
+    var adres = document.getElementById('adres');
+    var kart = document.getElementById('kart');
+
+    var varsayilan = location.origin + location.pathname.replace(/[^/]*$/, '');
+    adres.value = varsayilan;
+    if (!/^https:/.test(location.protocol)) document.getElementById('yerelUyari').hidden = false;
+
+    function qrYap(metin) {
+      var qr = qrcode(0, 'Q');
+      qr.addData(metin);
+      qr.make();
+      return qr;
+    }
+
+    function qrCiz(ctx, qr, x, y, boy, renk) {
+      var n = qr.getModuleCount();
+      var m = boy / n;
+      ctx.fillStyle = renk;
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        if (qr.isDark(r, c)) ctx.fillRect(Math.floor(x + c * m), Math.floor(y + r * m), Math.ceil(m), Math.ceil(m));
+      }
+    }
+
+    function dalCiz(ctx, x, y, olcek, aci) {
+      ctx.save();
+      ctx.translate(x, y); ctx.rotate(aci); ctx.scale(olcek, olcek);
+      ctx.strokeStyle = '#9BA170'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(6, 164); ctx.bezierCurveTo(40, 150, 70, 128, 98, 104); ctx.bezierCurveTo(126, 80, 152, 52, 210, 12); ctx.stroke();
+      var yapraklar = ['M34 151 c -4 -14 3 -25 17 -29 c 2 14 -5 25 -17 29z', 'M52 142 c 12 6 25 3 32 -8 c -12 -7 -25 -4 -32 8z', 'M74 124 c -3 -15 5 -26 19 -29 c 1 15 -7 26 -19 29z', 'M96 106 c 13 5 26 0 31 -12 c -13 -5 -25 0 -31 12z', 'M118 84 c -2 -15 7 -25 21 -27 c 0 15 -8 25 -21 27z', 'M140 64 c 13 4 25 -2 29 -14 c -13 -4 -25 2 -29 14z', 'M162 44 c -1 -14 8 -23 21 -24 c -1 14 -9 23 -21 24z', 'M186 26 c 11 3 21 -2 24 -12 c -11 -3 -21 2 -24 12z'];
+      yapraklar.forEach(function (d, i) { ctx.fillStyle = i % 2 ? '#A7AD7C' : ZEYTIN; ctx.fill(new Path2D(d)); });
+      ctx.fillStyle = GUL;
+      ctx.beginPath(); ctx.arc(61, 129, 4.2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(131, 72, 3.8, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+
+    function ortala(ctx, metin, y, font, renk) {
+      ctx.font = font; ctx.fillStyle = renk; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText(metin, ctx.canvas.width / 2, y);
+    }
+
+    function tarihYazi() {
+      var s = String(A.tarih || '');
+      if (!/[zZ]|[+-]\d\d:?\d\d$/.test(s)) s += (s.length <= 16 ? ':00' : '') + '+03:00';
+      var d = new Date(s);
+      if (isNaN(d)) return '';
+      return new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul', day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+    }
+
+    function kartCiz() {
+      var ctx = kart.getContext('2d');
+      var G = kart.width, Y = kart.height;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, G, Y);
+
+      // altın kemer çerçeve
+      var k = 70, ust = 70, alt = Y - 70, sol = k, sag = G - k, yr = (sag - sol) / 2;
+      ctx.strokeStyle = ALTIN; ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(sol, alt - 40); ctx.lineTo(sol, ust + yr);
+      ctx.arc(G / 2, ust + yr, yr, Math.PI, 0);
+      ctx.lineTo(sag, alt - 40); ctx.quadraticCurveTo(sag, alt, sag - 40, alt);
+      ctx.lineTo(sol + 40, alt); ctx.quadraticCurveTo(sol, alt, sol, alt - 40);
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(201,162,87,.35)'; ctx.lineWidth = 1.5;
+      var ic = 18;
+      ctx.beginPath();
+      ctx.moveTo(sol + ic, alt - 40); ctx.lineTo(sol + ic, ust + yr);
+      ctx.arc(G / 2, ust + yr, yr - ic, Math.PI, 0);
+      ctx.lineTo(sag - ic, alt - 40);
+      ctx.stroke();
+
+      dalCiz(ctx, 92, 470, 1.25, -0.18);
+
+      ortala(ctx, 'Nişanımıza hoş geldiniz', 330, '400 44px Figtree', GUL);
+      ortala(ctx, A.isim1 || '', 450, 'italic 360 104px Fraunces', GECE);
+      ortala(ctx, '&', 535, 'italic 300 70px Fraunces', ALTIN);
+      ortala(ctx, A.isim2 || '', 640, 'italic 360 104px Fraunces', GECE);
+
+      ortala(ctx, 'Bu gecenin anılarını bizimle paylaşın', 760, 'italic 400 52px Fraunces', GECE);
+
+      // QR
+      var qr = qrYap(adres.value.trim() || varsayilan);
+      var boy = 560, qx = (G - boy) / 2, qy = 820;
+      ctx.fillStyle = '#FFFFFF'; ctx.fillRect(qx - 36, qy - 36, boy + 72, boy + 72);
+      ctx.strokeStyle = '#E4DCE6'; ctx.lineWidth = 3;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(qx - 36, qy - 36, boy + 72, boy + 72, 28); else ctx.rect(qx - 36, qy - 36, boy + 72, boy + 72); ctx.stroke();
+      qrCiz(ctx, qr, qx, qy, boy, GECE);
+
+      ortala(ctx, '1. Telefon kameranızla kodu okutun', 1510, '500 38px Figtree', GECE);
+      ortala(ctx, '2. Fotoğraf ve videolarınızı seçip gönderin', 1562, '500 38px Figtree', GECE);
+      ortala(ctx, 'Scan to share your photos and videos', 1618, '400 32px Figtree', SOLUK);
+    }
+
+    function indir(canvas, ad) {
+      canvas.toBlob(function (b) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(b);
+        a.download = ad;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+      }, 'image/png');
+    }
+
+    document.getElementById('kartIndir').onclick = function () { indir(kart, 'masa-karti-qr.png'); };
+    document.getElementById('qrIndir').onclick = function () {
+      var qr = qrYap(adres.value.trim() || varsayilan);
+      var n = qr.getModuleCount() + 8, m = Math.ceil(2000 / n);
+      var c = document.createElement('canvas');
+      c.width = c.height = n * m;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+      qrCiz(ctx, qr, 4 * m, 4 * m, (n - 8) * m, '#000');
+      indir(c, 'qr-kod.png');
+    };
+    document.getElementById('yazdir').onclick = function () {
+      var url = kart.toDataURL('image/png');
+      var b = document.getElementById('baski');
+      b.innerHTML = '';
+      for (var i = 0; i < 4; i++) { var img = new Image(); img.src = url; img.alt = ''; b.appendChild(img); }
+      setTimeout(function () { window.print(); }, 300);
+    };
+
+    adres.addEventListener('input', kartCiz);
+    var fontlar = ['italic 360 100px Fraunces', 'italic 400 50px Fraunces', '400 40px Figtree', '500 40px Figtree'];
+    Promise.all(fontlar.map(function (f) { return document.fonts.load(f, 'Sude Sıla & Recep Yusuf ğüşİöç'); }))
+      .catch(function () {}).then(kartCiz);
+  })();
+  </script>
+</body>
+</html>

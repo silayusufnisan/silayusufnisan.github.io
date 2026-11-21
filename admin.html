@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F7F4F6">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Yönetim paneli | Sude Sıla &amp; Recep Yusuf</title>
+  <link rel="icon" href="assets/img/simge.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/simge-180.png">
+  <link rel="stylesheet" href="assets/css/ortak.css?v=1">
+  <link rel="stylesheet" href="assets/css/yonetim.css?v=1">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-yenile" viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.05-4.95M19 4.5v4h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-klasor" viewBox="0 0 24 24"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2.2h7a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tablo" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 9.5v10" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM16 16h2v2h-2z" fill="currentColor"/></symbol>
+    <symbol id="i-oynat" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-durdur" viewBox="0 0 24 24"><rect x="6.5" y="5.5" width="4" height="13" rx="1.2" fill="currentColor"/><rect x="13.5" y="5.5" width="4" height="13" rx="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 10.5l5-3v9l-5-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mikrofon" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-galeri" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.8 17.5l5-4.6 3.6 3.2 2.6-2.3 5.2 4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="i-uyari" viewBox="0 0 24 24"><path d="M12 4l9 16H3z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 10v4.5M12 17.2v.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-ara" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M15.5 15.5L20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ GİRİŞ ============ -->
+<main class="giris" id="giris">
+  <form class="giris__kutu" id="girisFormu" novalidate>
+    <p class="giris__cift serif">Sude Sıla &amp; Recep Yusuf</p>
+    <h1 class="giris__baslik serif">Yönetim paneli</h1>
+    <p class="giris__aciklama">Misafirlerin paylaştığı anıları buradan takip edebilirsiniz.</p>
+    <label class="alan">
+      <span class="alan__etiket">Şifre</span>
+      <input class="girdi" id="sifre" type="password" autocomplete="current-password" required>
+      <span class="alan__hata" id="girisHata" hidden></span>
+    </label>
+    <button class="dugme dugme--ana dugme--tam" type="submit" id="girisDugme">Giriş yap</button>
+  </form>
+</main>
+
+<!-- ============ PANEL ============ -->
+<div class="panel" id="panel" hidden>
+  <header class="panel__ust">
+    <div>
+      <p class="panel__cift serif">Sude Sıla &amp; Recep Yusuf</p>
+      <p class="panel__alt" id="sonGuncelleme">Yükleniyor…</p>
+    </div>
+    <div class="panel__eylem">
+      <button class="ikon-dugme" type="button" id="yenile" aria-label="Yenile"><svg><use href="#i-yenile"/></svg></button>
+      <button class="dugme dugme--metin" type="button" id="cikis">Çıkış</button>
+    </div>
+  </header>
+
+  <main class="panel__govde">
+    <section class="ozet" aria-label="Özet">
+      <div class="ozet__ana">
+        <p class="ozet__sayi serif" id="toplamAni">0</p>
+        <p class="ozet__etiket">anı paylaşıldı</p>
+      </div>
+      <dl class="kutular">
+        <div class="kutu"><dt>Fotoğraf</dt><dd id="sPhoto">0</dd></div>
+        <div class="kutu"><dt>Video</dt><dd id="sVideo">0</dd></div>
+        <div class="kutu"><dt>Sesli mesaj</dt><dd id="sAudio">0</dd></div>
+        <div class="kutu"><dt>Not</dt><dd id="sNotes">0</dd></div>
+        <div class="kutu"><dt>Paylaşan kişi</dt><dd id="sGuests">0</dd></div>
+        <div class="kutu"><dt>Toplam boyut</dt><dd id="sBytes">0 MB</dd></div>
+      </dl>
+    </section>
+
+    <section class="kart depo" aria-labelledby="depoBaslik">
+      <div class="kart__ust">
+        <h2 class="kart__baslik" id="depoBaslik">Depolama</h2>
+        <span class="depo__durum" id="depoDurum" hidden><svg><use href="#i-uyari"/></svg><span></span></span>
+      </div>
+      <p class="depo__bos serif" id="depoBos">–</p>
+      <div class="depo__ray" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="depoBaslik" id="depoMeter">
+        <span class="depo__dolu" id="depoDolu"></span>
+      </div>
+      <p class="depo__yazi" id="depoYazi"></p>
+    </section>
+
+    <section class="kart ayar" aria-labelledby="acikBaslik">
+      <div class="ayar__satir">
+        <div>
+          <h2 class="kart__baslik" id="acikBaslik">Misafir yüklemeleri</h2>
+          <p class="ayar__aciklama" id="acikAciklama">Açık: misafirler anı paylaşabiliyor.</p>
+        </div>
+        <button class="anahtar" type="button" role="switch" aria-checked="true" aria-labelledby="acikBaslik" id="acikAnahtar"><span></span></button>
+      </div>
+      <div class="baglantilar">
+        <a class="baglanti" id="lnkKlasor" href="#" target="_blank" rel="noopener"><svg><use href="#i-klasor"/></svg>Drive klasörünü aç</a>
+        <a class="baglanti" id="lnkTablo" href="#" target="_blank" rel="noopener"><svg><use href="#i-tablo"/></svg>Kayıt tablosunu aç</a>
+        <a class="baglanti" href="qr.html" target="_blank" rel="noopener"><svg><use href="#i-qr"/></svg>QR masa kartı</a>
+      </div>
+    </section>
+
+    <section class="kart kart--genis" aria-labelledby="sonBaslik">
+      <div class="kart__ust">
+        <h2 class="kart__baslik" id="sonBaslik">Son yüklenenler</h2>
+      </div>
+      <ul class="son" id="sonListe"></ul>
+      <p class="bos-yazi" id="sonBos" hidden>Henüz yükleme yok. İlk anılar geldiğinde burada görünecek.</p>
+    </section>
+
+    <section class="kart kart--genis" aria-labelledby="kisiBaslik">
+      <div class="kart__ust kart__ust--sarmal">
+        <h2 class="kart__baslik" id="kisiBaslik">Kişilere göre</h2>
+        <div class="filtre">
+          <label class="arama">
+            <svg><use href="#i-ara"/></svg>
+            <span class="gorunmez">Kişi ara</span>
+            <input type="search" id="kisiAra" placeholder="İsim ya da telefon ara">
+          </label>
+          <label class="gorunmez" for="kisiSirala">Sırala</label>
+          <select id="kisiSirala" class="secim-kutusu">
+            <option value="adet">En çok paylaşan</option>
+            <option value="son">En son paylaşan</option>
+            <option value="ad">İsme göre</option>
+          </select>
+        </div>
+      </div>
+      <div class="tablo-kap">
+        <table class="kisiler">
+          <thead>
+            <tr><th scope="col">Kişi</th><th scope="col" class="say">Fotoğraf</th><th scope="col" class="say">Video</th><th scope="col" class="say">Ses</th><th scope="col" class="say">Not</th><th scope="col" class="say">Boyut</th><th scope="col">Son paylaşım</th></tr>
+          </thead>
+          <tbody id="kisiListe"></tbody>
+        </table>
+      </div>
+      <p class="bos-yazi" id="kisiBos" hidden>Eşleşen kişi yok.</p>
+    </section>
+
+    <section class="kart kart--genis" aria-labelledby="notBaslik">
+      <div class="kart__ust"><h2 class="kart__baslik" id="notBaslik">Anı defteri</h2><span class="kart__sayi" id="notSayi"></span></div>
+      <div class="notlar" id="notListe"></div>
+      <p class="bos-yazi" id="notBos" hidden>Henüz not ya da sesli mesaj bırakılmadı.</p>
+    </section>
+  </main>
+</div>
+
+<div class="bildirimler" id="bildirimler" aria-live="assertive"></div>
+
+<script src="ayarlar.js?v=1"></script>
+<script src="assets/js/api.js?v=1"></script>
+<script src="assets/js/yonetim.js?v=1"></script>
+</body>
+</html>
