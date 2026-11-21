@@ -8,7 +8,7 @@
 window.AYARLAR = {
   // Google Apps Script "Web uygulaması URL'si" (kurulum rehberi 3. adım)
   // Örnek: 'https://script.google.com/macros/s/AKfycb.../exec'
-  apiUrl: '',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbwLdycW1OyABQtVY1Y4ofhy1V9e0IYr-wj5510MmxFw3wPDcNHUoWBGHxdrUTijhkv1dQ/exec',
 
   // Çiftin isimleri
   isim1: 'Sude Sıla',
